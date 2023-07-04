@@ -8,11 +8,18 @@ interface ISelect {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register?: any;
   value?: string;
+  disabled?: boolean;
 }
 
-const Select = ({ label, options, register, value }: ISelect) => {
+const Select = ({
+  label,
+  options,
+  register,
+  value,
+  disabled = false,
+}: ISelect) => {
   const [selected, setSelected] = useState(value || options?.[0]?.answer_title);
-
+  console.log(selected);
   const getAnswerId = (answerTitle: string) =>
     options?.find(({ answer_title }) => answerTitle === answer_title)?.id;
 
@@ -29,7 +36,6 @@ const Select = ({ label, options, register, value }: ISelect) => {
       onChange={(value) => {
         setSelected(value);
         const curId = getAnswerId(value);
-        console.log(value);
         register.onChange({
           target: {
             name: register.name,
@@ -37,16 +43,18 @@ const Select = ({ label, options, register, value }: ISelect) => {
           },
         });
       }}
+      disabled={disabled}
     >
       <Listbox.Label>{label}</Listbox.Label>
       <div className="w-full relative">
         <Listbox.Button as={Fragment}>
           {({ value: defaultVal, open }) => (
             <Listbox.Label
-              className={`relative w-full text-left flex items-center  bg-qss-input py-2 px-4 rounded-full outline-none ${
+              className={`relative w-full text-left flex items-center border  bg-qss-input py-2 px-4 rounded-full outline-none ${
                 open && "text-qss-secondary border border-qss-base-200"
               } ${value ? "text-qss-secondary" : "text-qss-base-300"} `}
             >
+              
               {value || defaultVal}
               <span className={`absolute right-6 ${open && "rotate-180"}`}>
                 <Icon
